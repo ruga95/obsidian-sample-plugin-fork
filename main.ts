@@ -42,7 +42,7 @@ export default class HelloPlugin extends Plugin {
 
 		// added by Ruga
 		this.addRibbonIcon("dice", "你好", () => {
-			new Notice("你好卢舸！");
+			new Notice("你好卢舸！——————");
 		}).addClass("my-plugin-ribbon-class");
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
@@ -134,7 +134,7 @@ class SampleModal extends Modal {
 
 	onOpen() {
 		const { contentEl } = this;
-		contentEl.setText("Woah!");
+		contentEl.setText("Goodday Ruga!");
 	}
 
 	onClose() {
