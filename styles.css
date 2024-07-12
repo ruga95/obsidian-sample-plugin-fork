@@ -6,3 +6,18 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.head1 {
+	border: 1px solid var(--background-modifier-border);
+	padding: 8px 0 20px 0;
+  text-align: center;
+  /* background-image: url(./images/donut.svg); */
+}
+
+.head1__title {
+	font-weight: 700;
+}
+
+.head1__author {
+	color: var(--text-muted);
+}
