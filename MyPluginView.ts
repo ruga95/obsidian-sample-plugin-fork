@@ -1,3 +1,4 @@
+import { promises } from "dns";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 
 export const VIEW_TYPE = "myplugin-view";
@@ -40,6 +41,12 @@ export class MyPluginView extends ItemView {
 
     // console.log(this.contentEl.doc);
   }
+
+  /* protected onClose(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      
+    })
+  } */  
 
   async onClose() {
     // Nothing to clean up.

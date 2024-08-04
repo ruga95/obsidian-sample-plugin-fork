@@ -1,22 +1,10 @@
 import { MyPluginSettingTab } from "MyPluginSettingTab";
 import {
-	MyPluginFuzzyModal,
-	MyPluginSubmitModal,
-	MyPluginSuggestModal,
-	MyPluginModal,
+	MyPluginFuzzyModal, MyPluginSubmitModal, MyPluginSuggestModal, MyPluginModal,
 } from "./MyPluginModal";
 import {
-	addIcon,
-	Editor,
-	MarkdownView,
-	Menu,
-	moment,
-	Notice,
-	Plugin,
-	setIcon,
-	TFile,
-	Vault,
-	WorkspaceLeaf,
+	addIcon, Editor, MarkdownView, Menu, moment,
+	Notice, Plugin, setIcon, TFile, WorkspaceLeaf,
 } from "obsidian";
 import { MyPluginView, VIEW_TYPE } from "MyPluginView";
 import { emojiListField } from "MyPluginStateField";
@@ -339,6 +327,10 @@ export default class MyPlugin extends Plugin {
 				5 * 60 * 1000
 			)
 		);
+
+		this.app.workspace.onLayoutReady(() => {
+			console.log("MyPlugin onLayoutReady :", "你好卢舸！");
+		});
 	}
 
 	private showModal() {
@@ -388,6 +380,11 @@ export default class MyPlugin extends Plugin {
 		if (leaves.length > 0) {
 			// A leaf with our view already exists, use that
 			leaf = leaves[0];
+			console.log(
+				"myPlugin.activateView :",
+				leaf.getViewState(),
+				leaf.view.getState()
+			);
 		} else {
 			// Our view could not be found in the workspace, create a new leaf
 			// in the right sidebar for it
@@ -399,4 +396,11 @@ export default class MyPlugin extends Plugin {
 		// "Reveal" the leaf in case it is in a collapsed sidebar
 		if (leaf) workspace.revealLeaf(leaf);
 	}
+
+	onunload(): void {
+		// plugin unload 时
+		const { workspace } = this.app;
+		workspace.detachLeavesOfType(VIEW_TYPE);
+	}
+
 }
