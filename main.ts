@@ -3,7 +3,7 @@ import {
 	MyPluginFuzzyModal, MyPluginSubmitModal, MyPluginSuggestModal, MyPluginModal,
 } from "./MyPluginModal";
 import {
-	addIcon, Editor, MarkdownView, Menu, moment,
+	addIcon, Editor, EventRef, MarkdownView, Menu, moment,
 	Notice, Plugin, setIcon, TFile, WorkspaceLeaf,
 } from "obsidian";
 import { MyPluginView, VIEW_TYPE } from "MyPluginView";
@@ -30,6 +30,7 @@ const ALL_EMOJIS: Record<string, string> = {
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 	statusBarSpan: HTMLSpanElement;
+	layoutChangeEventRef: EventRef;
 
 	private async loadSettings() {
 		this.settings = Object.assign(
@@ -217,7 +218,7 @@ export default class MyPlugin extends Plugin {
 				menu.addItem((item) => {
 					item.setTitle("Print file path 👈")
 						.setIcon("document")
-						.onClick(async () => {
+						.onClick(() => {
 							new Notice(file.path);
 						});
 				});
@@ -229,9 +230,18 @@ export default class MyPlugin extends Plugin {
 				menu.addItem((item) => {
 					item.setTitle("Print file path 👈")
 						.setIcon("document")
-						.onClick(async () => {
-							if (view.file) new Notice(view.file.path);
-							else new Notice("view.file is null");
+						.onClick(() => {
+							// @ts-ignore
+							const token = editor.getClickableTokenAt(editor.getCursor());
+							if(token) {
+								new Notice(`[${token.type}] ${token.text}`);
+								return;
+							}
+							if (view.file) {
+								new Notice(view.file.path);
+								return;
+							}
+							new Notice("view.file is null");
 						});
 				});
 			})
@@ -329,8 +339,14 @@ export default class MyPlugin extends Plugin {
 		);
 
 		this.app.workspace.onLayoutReady(() => {
-			console.log("MyPlugin onLayoutReady :", "你好卢舸！");
+			console.log("MyPlugin workspace onLayoutReady :", "你好卢舸！");
 		});
+
+
+		this.layoutChangeEventRef = this.app.workspace.on("layout-change", () => {
+			console.log("MyPlugin workspace layout-change :", "你好卢舸！");
+		});
+
 	}
 
 	private showModal() {
@@ -400,7 +416,10 @@ export default class MyPlugin extends Plugin {
 	onunload(): void {
 		// plugin unload 时
 		const { workspace } = this.app;
+
 		workspace.detachLeavesOfType(VIEW_TYPE);
+
+		this.app.workspace.offref(this.layoutChangeEventRef);
 	}
 
 }

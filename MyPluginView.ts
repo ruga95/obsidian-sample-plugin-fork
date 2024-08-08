@@ -1,4 +1,3 @@
-import { promises } from "dns";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 
 export const VIEW_TYPE = "myplugin-view";
