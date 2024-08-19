@@ -233,7 +233,7 @@ export default class MyPlugin extends Plugin {
 						.onClick(() => {
 							// @ts-ignore
 							const token = editor.getClickableTokenAt(editor.getCursor());
-							if(token) {
+							if (token) {
 								new Notice(`[${token.type}] ${token.text}`);
 								return;
 							}
@@ -261,6 +261,18 @@ export default class MyPlugin extends Plugin {
 			// console.log("workspace.on editor-change editor :", editor);
 			// this.updateLineCount(editor.getDoc().getValue());
 			this.updateLineCount(editor.getValue());
+		});
+
+
+		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
+		// Using this function will automatically remove the event listener when this plugin is disabled.
+		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
+			console.log('click on [ctrl]', evt.ctrlKey);
+		});
+
+
+		this.registerDomEvent(document, 'mouseup', (e: MouseEvent) => {
+			console.log('mouseup on [ctrl] :', e.shiftKey, e.ctrlKey);
 		});
 
 		// This adds a simple command that can be triggered anywhere
